@@ -52,7 +52,6 @@ export const LandingPage = () => {
             <Button size='lg' variant='outline-primary' onClick={signInWithGoogle}>Continue with Google</Button>
             {/* Add Spacing */}
             <div className='mb-3'></div>
-            <Button size='lg' variant='outline-primary' onClick={tryNow}>Try now.</Button>
           </div>
     )
 }
