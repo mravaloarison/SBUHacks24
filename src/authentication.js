@@ -19,7 +19,9 @@ export const signInWithGoogle = (navigate) => {
     signInWithPopup(auth, provider)
         .then((result) => {
             const user = result.user;
+            console.log(user);
             sessionStorage.setItem('user', user.displayName);
+            sessionStorage.setItem('user_fid', user.uid);
 
             // Redirect to a different route
             //   Reload the page

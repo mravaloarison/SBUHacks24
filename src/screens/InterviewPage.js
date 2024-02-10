@@ -2,13 +2,15 @@ import { Button, Stack, Form, Toast, Alert } from 'react-bootstrap';
 import { useEffect, useState } from 'react';
 import SpeechRecognition, { useSpeechRecognition } from 'react-speech-recognition';
 import { Feedback } from '../components/Feedback';
-
+import { AskFeedback } from '../utils';
 
 export const InterviewPage = () => {
     const [recording, setRecording] = useState(false);
     const [showToast, setShowToast] = useState(false);
     const [enableRecording, setEnableRecording] = useState(false);
     const [responseIsPublic, setResponseIsPublic] = useState(false);
+    const [questionPrompt, setQuestionPrompt] = useState('Tell me more about yorself');
+    const [feedbacks, setFeedbacks] = useState([]);
 
     const [transcriptText, setTranscriptText] = useState('');
 
@@ -42,8 +44,21 @@ export const InterviewPage = () => {
         return <span>Browser doesn't support speech recognition.</span>;
     }
 
-    const handleFeedBack = () => {
+    const handleFeedBack = async  () => {
+
+        let responseText = enableRecording ? transcript : transcriptText;
+        const feedbackMessage = await AskFeedback({
+            answer: responseText,
+            user_fid: sessionStorage.getItem('user'),
+            prompt_message: questionPrompt,
+            is_public: responseIsPublic
+        });
+
+        
+
+        setFeedbacks([...feedbacks, feedbackMessage]);
         setShowToast(true);
+
     };
 
     const toggleShowToast = () => {
@@ -62,7 +77,9 @@ export const InterviewPage = () => {
     return (
         <div className="mt-4">
             <hr />
-            <h3>Tell me more about yorself</h3>
+            <h3>
+                {questionPrompt}
+            </h3>
 
 
             <Form.Check
@@ -102,7 +119,11 @@ export const InterviewPage = () => {
                     <small>Just now</small>
                 </Toast.Header>
                 <Toast.Body>
-                    <Feedback type="warning" message="You should be more carefull regarding ...." />
+                    {
+                        feedbacks.reverse().map((feedback, index) => {
+                            return <Alert key={index} variant={feedback.type}>{feedback.message}</Alert>
+                        })
+                    }
                 </Toast.Body>
             </Toast>
         </div>

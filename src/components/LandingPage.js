@@ -13,6 +13,8 @@ const tryNow = () => {
 
 
 export const LandingPage = () => {
+    
+  const userName = sessionStorage.getItem('user');
     return (
         <div className="mt-4 text-center">
             <h3>
