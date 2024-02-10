@@ -22,9 +22,6 @@ const ProtectedRoute = ({ user, children }) => {
 
 function App() {
   const userName = sessionStorage.getItem('user');
-  console.log('======================')
-  console.log(userName, 'userName')
-
   return (
     <div className="App">
       <Router>
