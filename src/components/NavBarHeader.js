@@ -15,22 +15,45 @@ export const NavBarHeader = () => {
     signOut(navigate);
   };
 
+  const handleProfile = () => {
+    navigate('/profile');
+  };
+
   return (
     <Navbar className="bg-body-tertiary">
       <Container fluid>
-        <Navbar.Brand>InsightAssist</Navbar.Brand>
+        <Navbar.Brand
+          onClick={() => navigate('/')}
+        >
+          InsightAssist
+        </Navbar.Brand>
         {userName ?
-          <Button className="ms-auto" variant="outline-secondary"
-            onClick={handleLogout}
-          >
-            Logout
-          </Button>
+          (
+            <div className="ms-auto">
+        <a className="linkStyle" onClick={handleProfile}>
+          Profile
+        </a>
+              {/* Some pdding */}
+              <Button className="" variant="outline-secondary"
+                onClick={handleLogout}
+              >
+                Logout
+              </Button>
+
+            </div>
+
+          )
           :
-          <Button className="ms-auto" variant="outline-primary"
-            onClick={handleLogin}
-          >
-            Login
-          </Button>
+          (
+            <>
+
+              <Button className="ms-auto" variant="outline-primary"
+                onClick={handleLogin}
+              >
+                Login
+              </Button>
+            </>
+          )
         }
       </Container>
     </Navbar>

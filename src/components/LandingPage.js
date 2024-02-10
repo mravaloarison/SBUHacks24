@@ -3,11 +3,10 @@ import { Container, Row, Button } from 'react-bootstrap';
 import { FeatureCard } from './FeaturedCard';
 import { BsAppIndicator } from 'react-icons/bs';
 import { signInWithGoogle } from '../authentication';
-import {useNavigate} from 'react-router-dom';
 
 const tryNow = () => {
     console.log('Try now');
-    
+
 
 
 }
