@@ -1,8 +1,11 @@
 import { Container } from 'react-bootstrap';
 import { Recording } from './components/Recording';
+
 import { NavBarHeader } from './components/NavBarHeader';
 import { LandingPage } from './components/LandingPage';
 import { ProfilePage } from './screens/ProfilePage';
+import { InterviewPage } from './screens/InterviewPage';
+
 import { DashboardPage } from './screens/DashboardPage';
 
 import './global.css';
@@ -33,7 +36,7 @@ function App() {
               path="interview"
               element={
                 <ProtectedRoute user={userName}>
-                  <Recording />
+                  <InterviewPage />
                 </ProtectedRoute>
               }
             />
