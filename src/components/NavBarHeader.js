@@ -30,6 +30,7 @@ export const NavBarHeader = () => {
         {userName ?
           (
             <div className="ms-auto">
+        
         <a className="linkStyle" onClick={handleProfile}>
           Profile
         </a>

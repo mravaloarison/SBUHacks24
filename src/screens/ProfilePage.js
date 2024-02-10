@@ -1,21 +1,110 @@
-import React from 'react';
-import { Container, Row, Button } from 'react-bootstrap';
-import { BsAppIndicator } from 'react-icons/bs';
-
+import { Form, Button, Stack, Modal } from 'react-bootstrap';
+import { BiLayerPlus } from 'react-icons/bi';
+import { useState } from 'react';
 
 export const ProfilePage = () => {
-    return (
-        <div className="mt-4 text-center">
-            <h3>
-              <span><BsAppIndicator /></span>
-              <span> Profile</span>
-            </h3>
-            <hr />
-            
-            <Container fluid className='mx-auto mb-3'>
-                <p>Here we should siplay some analytics and overall Data about the user</p>
-            </Container>
+    const user = sessionStorage.getItem('user');
+    const [show, setShow] = useState(false);
+    const handleClose = () => setShow(false);
+    const handleShow = () => setShow(true);
 
-          </div>
+
+    const submitForm = () => {
+        const form = document.getElementById('form_to_submit');
+        const formData = new FormData(form);
+        const data = {};
+        for (let key of formData.keys()) {
+            data[key] = formData.get(key);
+        }
+        console.log(data);
+        handleClose();
+    }
+
+    
+    return (
+        <div className="mt-5">
+            <p>You are logged in as: {user}</p>
+
+            <Stack direction='vertical' gap={3} fluid>
+                <Form.Control type="search" placeholder="search" />
+                <Button style={{ width: "160px" }} variant='primary' onClick={handleShow}>
+                    <span><BiLayerPlus /></span>
+                    <span> Create New</span>
+                </Button>
+            </Stack>
+            <hr />
+            {/* Suggestions */}
+            <div className="mt-5">
+                <h4>My Suggestions</h4>
+                <p>Nothing here yet</p>
+            </div>
+
+            <Modal
+                show={show}
+                onHide={handleClose}
+                backdrop="static"
+                keyboard={false}
+            >
+                <Modal.Header closeButton>
+                <Modal.Title>Creating new Interview</Modal.Title>
+                </Modal.Header>
+                    <Modal.Body>
+                        <Form id='form_to_submit'>
+
+                            <Stack direction="vertical" gap={3}>
+                                <Form.Group className="mb-3">
+                                    <Form.Label>Job Title <span className='text-danger'>*</span></Form.Label>
+                                    <Form.Control type="text" placeholder="Job Title" />
+                                </Form.Group>
+                                
+                                <Stack gap={3} direction="horizontal">
+                                    <Form.Group className="mb-3" style={{ width: "100%" }}>
+                                        <Form.Label>Job type</Form.Label>
+                                        <Form.Select aria-label="Default select example">
+                                            <option>Job type</option>
+                                            <option value="1">Internship</option>
+                                            <option value="2">Entry level</option>
+                                            <option value="3">Mid level</option>
+                                            <option value="4">Senior level</option>
+                                        </Form.Select>
+                                    </Form.Group>
+
+                                    <Form.Group className="mb-3" style={{ width: "100%" }}>
+                                        <Form.Label>Industry</Form.Label>
+                                        <Form.Select aria-label="Default select example">
+                                            <option>Industry</option>
+                                            <option value="1">Tech</option>
+                                            <option value="2">Health</option>
+                                            <option value="3">Finance</option>
+                                            <option value="4">Education</option>
+                                        </Form.Select>
+                                    </Form.Group>
+
+                                    <Form.Group className="mb-3" style={{ width: "100%" }}>
+                                        <Form.Label>Location</Form.Label>
+                                        <Form.Select aria-label="Default select example">
+                                            <option>Location</option>
+                                            <option value="1">Remote</option>
+                                            <option value="2">On-site</option>
+                                        </Form.Select>
+                                    </Form.Group>
+                                </Stack>
+
+
+                                <Form.Group className="mb-3">
+                                    <Form.Label>Job description <span className='text-danger'>*</span></Form.Label>
+                                    <Form.Control as="textarea" rows={4} placeholder="Job description" />
+                                </Form.Group>
+                            </Stack>
+
+
+                        </Form>
+                    </Modal.Body>
+                <Modal.Footer>
+                    <Button variant="success" onClick={submitForm}>Generate Interview</Button>
+                </Modal.Footer>
+            </Modal>
+
+        </div>
     )
 }
