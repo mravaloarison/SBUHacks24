@@ -2,11 +2,15 @@ import { Button, Stack, Form, Toast, Alert } from 'react-bootstrap';
 import { useEffect, useState } from 'react';
 import SpeechRecognition, { useSpeechRecognition } from 'react-speech-recognition';
 import { Feedback } from './Feedback';
-
+import { RiAiGenerate } from 'react-icons/ri';
+import { MdSaveAlt } from 'react-icons/md';
 
 export const Recording = () => {
     const [recording, setRecording] = useState(false);
     const [showToast, setShowToast] = useState(false);
+    const actualQuestion = sessionStorage.getItem('actualQuestion');
+    const [GeneratedInterviewQuestions, setGeneratedInterviewQuestions] = useState(actualQuestion);
+    const [feedback, setFeedback] = useState("");
 
     const {
         transcript,
@@ -26,7 +30,6 @@ export const Recording = () => {
     const myFunction = () => {
         if (recording) {
             SpeechRecognition.stopListening();
-
         } else {
             SpeechRecognition.startListening({ continuous: true });
         }
@@ -38,21 +41,53 @@ export const Recording = () => {
 
     const handleFeedBack = () => {
         setShowToast(true);
+        // send it to the baclkend
+        fetch('http://127.0.0.1:5000/generate_feedback', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ 
+                question: GeneratedInterviewQuestions,
+                answer: transcript
+             })
+        })
+            .then(response => response.json())
+            .then(data => {
+                setFeedback(data.response);
+            });
     };
 
     const toggleShowToast = () => {
         setShowToast(!showToast);
     }
 
+    const generateQuestion = () => {
+        fetch('http://127.0.0.1:5000/generate_questions')
+            .then(response => response.json())
+            .then(data => {
+                setGeneratedInterviewQuestions(data.response);
+                sessionStorage.setItem('actualQuestion', data.response);
+            });
+    }
+
     return (
         <div className="mt-4">
-            <Stack direction="horizontal">
-                <Button variant='link'>Previous</Button>
-                <Button className='ms-auto' variant='link'>Next</Button>
+            <Stack direction="horizontal" gap={3}>
+                <Button variant='outline-primary' onClick={generateQuestion}>
+                    <span><RiAiGenerate /></span>
+                    <span> Generate</span>
+                </Button>
+                <Button variant='outline-primary'>
+                    <span><MdSaveAlt /></span>
+                    <span> Save</span>
+                </Button>
+                <Button className='ms-auto' variant='link'>End Interview</Button>
             </Stack>
             <hr />
-            <h3>Tell me more about yorself</h3>
-            
+            <h3>{GeneratedInterviewQuestions}</h3>
+
+
             <Form.Group className="mb-3" controlId="exampleForm.ControlTextarea1">
                 <Form.Label>Your response</Form.Label>
                 <Form.Control as="textarea" placeholder='' value={transcript} rows={5} />
@@ -72,7 +107,8 @@ export const Recording = () => {
                     <small>Just now</small>
                 </Toast.Header>
                 <Toast.Body>
-                    <Feedback type="warning" message="You should be more carefull regarding ...." />
+                    {/* <Feedback type={feedback.type} message={feedback.message} /> */}
+                    {feedback}
                 </Toast.Body>
             </Toast>
         </div>
