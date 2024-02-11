@@ -8,7 +8,7 @@ import 'react-calendar-heatmap/dist/styles.css';
 import { useNavigate } from 'react-router-dom';
 
 import CalendarHeatmap from 'react-calendar-heatmap';
-import { getHeatmapData, getRecentAnswers } from '../utils';
+import { getHeatmapData, getRecentAnswers, getUserBookmarks } from '../utils';
 
 export const ProfilePage = () => {
     const user = sessionStorage.getItem('user');
@@ -19,6 +19,7 @@ export const ProfilePage = () => {
     const navigate = useNavigate();
     const [heatmapData, setHeatmapData] = useState([]);
     const [recentAnswers, setRecentAnswers] = useState([]);
+    const [userBookmarks, setUserBookmarks] = useState([]);
 
 
     const submitForm = () => {
@@ -32,17 +33,20 @@ export const ProfilePage = () => {
         console.log(data);
         handleClose();
     }
-    const [key, setKey] = useState('tab1');
+    const [tabKey, setTabKey] = useState('Tab0');
     useEffect(() => {
         const fetchData = async () => {
             const heatmapData = await getHeatmapData(user_fid);
             const recentAnswers = await getRecentAnswers(user_fid);
+            const userBookmarks = await getUserBookmarks(user_fid);
+
             setHeatmapData(heatmapData);
             setRecentAnswers(recentAnswers);
+            setUserBookmarks(userBookmarks);
         };
         fetchData();
     }
-    , []);
+        , []);
 
     return (
         <div className="mt-5">
@@ -58,10 +62,30 @@ export const ProfilePage = () => {
             <br />
             <Tabs
                 id="controlled-tab-example"
-                activeKey={key}
-                onSelect={(k) => setKey(k)}
+                activeKey={tabKey}
+                onSelect={(k) => setTabKey(k)}
                 className="mb-3"
             >
+
+
+                <Tab eventKey="Tab0" title="Bookmarked Prompts">
+                    <Table bordered>
+                        <thead>
+                            <tr>
+                                <th>Prompt</th>
+                                <th>Saved</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {userBookmarks && userBookmarks.map((userBookmark, index) => (
+                                <tr key={index}>
+                                    <td>{userBookmark}</td>
+                                    <td>0</td>
+                                </tr>
+                            ))}
+                        </tbody>
+                    </Table>
+                </Tab>
                 <Tab eventKey="tab1" title="Recent Saved Responses">
                     <Table bordered>
                         <thead>
@@ -109,7 +133,6 @@ export const ProfilePage = () => {
                     </Table>
                 </Tab>
             </Tabs>
-            <hr />
 
         </div>
     )
