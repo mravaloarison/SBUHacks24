@@ -1,0 +1,13 @@
+{
+  "files": {
+    "main.css": "/SBUHacks24/static/css/main.8ea8d6aa.css",
+    "main.js": "/SBUHacks24/static/js/main.6758fc8d.js",
+    "index.html": "/SBUHacks24/index.html",
+    "main.8ea8d6aa.css.map": "/SBUHacks24/static/css/main.8ea8d6aa.css.map",
+    "main.6758fc8d.js.map": "/SBUHacks24/static/js/main.6758fc8d.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.8ea8d6aa.css",
+    "static/js/main.6758fc8d.js"
+  ]
+}
