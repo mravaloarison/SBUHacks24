@@ -56,16 +56,19 @@ function App() {
         <NavBarHeader className="clickeable" />
         <Container fluid className='mx-auto col-md-8'>
           <Routes>
-            <Route path="/" element={<LandingPage />} />
-            <Route path=":userId" element={<ProfilePage />} />
+            <Route path="/" element={<Recording />} />
+            <Route path="recording" element={<Recording />} />
             <Route
               path="interview"
-              element={
-                <ProtectedRoute user={userName}>
-                  <InterviewPage />
-                </ProtectedRoute>
-              }
-            />
+            >
+              <Route path="" element={<InterviewPage />} />
+              <Route path=":collectionId" element={<InterviewPage />} />
+
+            </Route>
+
+            <Route path=":userId" element={<ProtectedRoute>
+              <ProfilePage />
+            </ProtectedRoute>} />
             <Route path="/profile" element={
               <ProtectedRoute user={userName}>
                 <ProfilePage />

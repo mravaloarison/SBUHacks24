@@ -36,7 +36,7 @@ export const NavBarHeader = () => {
     <Navbar className="bg-body-tertiary">
       <Container fluid>
         <Navbar.Brand
-          onClick={() => navigate('/')}
+          onClick={() => navigate('/dashboard')}
         >
           InsightAssist
         </Navbar.Brand>

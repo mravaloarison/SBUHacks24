@@ -1,8 +1,10 @@
-import { Button, Stack, Form, Toast, Alert, Card } from 'react-bootstrap';
+import { Button, Stack, Form, Toast, Alert, Card, Dropdown, DropdownButton } from 'react-bootstrap';
 import { useEffect, useState } from 'react';
 import SpeechRecognition, { useSpeechRecognition } from 'react-speech-recognition';
-import { Feedback } from '../components/Feedback';
-import { AskFeedback, saveAnswer, postGetAnswers } from '../utils';
+
+import { AskFeedback, saveAnswer, postGetAnswers, getRandomPromp, getCategoricalPrompts } from '../utils';
+
+import { useParams } from 'react-router-dom';
 
 export const InterviewPage = () => {
     const [recording, setRecording] = useState(false);
@@ -11,15 +13,12 @@ export const InterviewPage = () => {
     const [responseIsPublic, setResponseIsPublic] = useState(false);
     const [questionPrompt, setQuestionPrompt] = useState('Tell me more about yorself');
     const [feedbacks, setFeedbacks] = useState([]);
-
+    const [relatedPrompts, setRelatedPrompts] = useState([]);
+    
     const [transcriptText, setTranscriptText] = useState('');
-    const [previousResponses, setPreviousResponses] = useState([{
-        answer: 'I am a software engineer with 5 years of experience',
-        user_fid: '12345',
-        prompt_message: 'Tell me more about yorself',
-        is_public: true,
-        timestamp: '2021-09-01T12:00:00'
-    }]);
+    const [previousResponses, setPreviousResponses] = useState([]);
+    
+    let { collectionId } = useParams();
 
 
 
@@ -36,17 +35,26 @@ export const InterviewPage = () => {
         } else {
             setRecording(false);
         }
-        
+
     }, [listening]);
 
     useEffect(() => {
-        getPreviousResponsesFromYourself();
-    }, []);
+        populateRelatedPrompts();
+        getPreviousResponsesFromYourself(questionPrompt);
+    },[]);
 
-    const getPreviousResponsesFromYourself = async () => {
-        const previousResponses = await postGetAnswers(sessionStorage.getItem('user_fid'), questionPrompt);
-        console.log(previousResponses, 'previousResponses')
+
+    const getPreviousResponsesFromYourself = async (question_prompt) => {
+        const previousResponses = await postGetAnswers(sessionStorage.getItem('user_fid'), question_prompt);
+        
         setPreviousResponses(previousResponses);
+    }
+
+    const populateRelatedPrompts = async () => {
+        if (collectionId) {
+            const relatedPrompts = await getCategoricalPrompts(collectionId);
+            setRelatedPrompts(relatedPrompts);
+        }
     }
 
     const recordingScreen = () => {
@@ -92,7 +100,7 @@ export const InterviewPage = () => {
     }
 
     const storeResponse = () => {
-        
+
         let responseText = enableRecording ? transcript : transcriptText;
         let responsePrompt = {
             answer: responseText,
@@ -106,6 +114,24 @@ export const InterviewPage = () => {
 
         saveAnswer(responsePrompt);
     }
+
+    const getRandom =  async () => {
+        
+        let randomResponse = await getRandomPromp(
+            collectionId
+        );
+        await populateInterviewPage(randomResponse);
+    
+    }
+
+    const populateInterviewPage = async (responsePrompt) => {
+        
+        setQuestionPrompt(responsePrompt.prompt);
+        
+        getPreviousResponsesFromYourself(responsePrompt.prompt);
+    }
+
+
 
 
     return (
@@ -145,6 +171,7 @@ export const InterviewPage = () => {
                 </Button>
                 <Button variant="outline-dark" onClick={handleFeedBack}>Get Feedback</Button>
                 <Button variant="outline-dark" onClick={storeResponse}>Save</Button>
+                <Button variant="outline-dark" onClick={getRandom}>Random</Button>
                 <Button variant="outline-danger" className='ms-auto' onClick={resetTranscript}>Reset Speech</Button>
             </Stack>
 
@@ -155,7 +182,7 @@ export const InterviewPage = () => {
                 </Toast.Header>
                 <Toast.Body>
                     {
-                        
+
                         feedbacks.map((feedback, index) => {
                             return <Alert key={index} variant={feedback.type}>{feedback.message}</Alert>
                         })
@@ -164,13 +191,28 @@ export const InterviewPage = () => {
             </Toast>
 
             <br />
+
+            <DropdownButton id="dropdown-basic-button" title="Related Prompts">
+                {
+                    relatedPrompts.map((prompt, index) => {
+                        return <Dropdown.Item key={index} onClick={() => populateInterviewPage(prompt)}>{prompt.prompt}</Dropdown.Item>
+                    })
+                }
+            </DropdownButton>
+
+            <br />
             {/* Add cards of your previous saved responses */}
-            <h5>Previous Responses</h5>
-            {previousResponses.map((response, index) => (
+
+
+
+            {
+                previousResponses && previousResponses.length > 0 ? <h4>Your previous responses</h4> : ''
+            }
+            {previousResponses && previousResponses.map((response, index) => (
                 <Card className="mb-3" key={index}>
                     <Card.Header>{
-                            response.timestamp
-                        }</Card.Header>
+                        response.timestamp
+                    }</Card.Header>
                     <Card.Body>
                         <Card.Text>
                             {response.answer}
