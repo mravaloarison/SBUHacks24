@@ -1,4 +1,4 @@
-import { Form, Button, Stack, Modal, Card } from 'react-bootstrap';
+import { Form, Button, Stack, Modal, Container, Card } from 'react-bootstrap';
 import { BiLayerPlus } from 'react-icons/bi';
 import { useState } from 'react';
 
@@ -22,8 +22,8 @@ export const ProfilePage = () => {
     }
 
 
-    const handleCardClick = () => {
-        console.log('card clicked');
+    const goToCollection = (collectionId = 1) => {
+        console.log('collectionId', collectionId);
     }
 
     return (
@@ -42,13 +42,19 @@ export const ProfilePage = () => {
             {/* Suggestions */}
             <div className="mt-5">
                 <h4>My Suggestions</h4>
-                <Card className="hoverable" onClick={handleCardClick}>
-                    <Card.Body>
-                        <Card.Title>Core Interviewing Questions</Card.Title>
-                        <Card.Text>
-                            Click here to view core interviewing questions.
-                        </Card.Text>
-                    </Card.Body>
+                <Card className="hoverable" onClick={() => {
+                    goToCollection(1);
+
+                }}>
+                    <Container fluid className='mx-auto col-md-7' >
+                        <Card.Body >
+                            <Card.Title>Core Interviewing Questions</Card.Title>
+                            <Card.Text>
+                                Click here to view core interviewing questions.
+                            </Card.Text>
+                        </Card.Body>
+
+                    </Container>
                 </Card>
             </div>
 
