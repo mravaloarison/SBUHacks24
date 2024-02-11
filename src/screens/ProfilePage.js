@@ -2,7 +2,13 @@ import { Form, Button, Stack, Modal, Container, Card } from 'react-bootstrap';
 import { BiLayerPlus } from 'react-icons/bi';
 import { useState } from 'react';
 
+import { useNavigate } from 'react-router-dom';
+
+import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
+
+
 export const ProfilePage = () => {
+    const navigate = useNavigate();
     const user = sessionStorage.getItem('user');
     const user_fid = sessionStorage.getItem('user_fid');
     const [show, setShow] = useState(false);
@@ -24,6 +30,7 @@ export const ProfilePage = () => {
 
     const goToCollection = (collectionId = 1) => {
         console.log('collectionId', collectionId);
+        navigate("/interview/" + collectionId);
     }
 
     return (
@@ -46,15 +53,6 @@ export const ProfilePage = () => {
                     goToCollection(1);
 
                 }}>
-                    <Container fluid className='mx-auto col-md-7' >
-                        <Card.Body >
-                            <Card.Title>Core Interviewing Questions</Card.Title>
-                            <Card.Text>
-                                Click here to view core interviewing questions.
-                            </Card.Text>
-                        </Card.Body>
-
-                    </Container>
                 </Card>
             </div>
 

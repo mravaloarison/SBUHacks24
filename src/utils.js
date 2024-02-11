@@ -136,8 +136,6 @@ export const signInUser = async (username, user_fid, email) => {
     }
 }
 
-
-
 export const postGetAnswers  = async (user_fid, prompt_message) => {
     const url = `${BACKEND_URL}/crud/prev_answers`;
     const data ={
@@ -158,4 +156,44 @@ export const postGetAnswers  = async (user_fid, prompt_message) => {
         return '';
     }
 }
+
+export const getRandomPromp = async (collection_id) => {
+    const url = `${BACKEND_URL}/crud/prompt_random/`;
+
+    try {
+        // Add collection_id as get param
+        const response = await axios.get(url, {
+            params: {
+                collection_id
+            }
+        });
+        // console.log(response);
+
+
+
+        return response.data;
+    } catch (error) {
+        console.error(error);
+        return '';
+    }
+}
+
+export const getCategoricalPrompts = async (collection_id) => {
+    const url = `${BACKEND_URL}/crud/prompts/`;
+
+    try {
+        // Add collection_id as get param
+        const response = await axios.get(url, {
+            params: {
+                collection_id
+            }
+        });
+        // console.log(response);
+        return response.data;
+    } catch (error) {
+        console.error(error);
+        return '';
+    }
+}
+
 
