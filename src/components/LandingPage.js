@@ -18,7 +18,6 @@ export const LandingPage = () => {
     return (
         <div className="mt-4 text-center">
             <h3>
-              <span><BsAppIndicator /></span>
               <span> Welcome to InsightAssist</span>
             </h3>
             <hr />

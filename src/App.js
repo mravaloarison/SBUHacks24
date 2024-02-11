@@ -1,6 +1,10 @@
 import { Container } from 'react-bootstrap';
 import { Recording } from './components/Recording';
+<<<<<<< HEAD
+import { Profile } from './pages/Profile';
+=======
 
+>>>>>>> origin/main
 import { NavBarHeader } from './components/NavBarHeader';
 import { LandingPage } from './components/LandingPage';
 import { ProfilePage } from './screens/ProfilePage';
@@ -25,6 +29,27 @@ const ProtectedRoute = ({ user, children }) => {
 
 function App() {
   const userName = sessionStorage.getItem('user');
+<<<<<<< HEAD
+  const NotLandingPage = () => {
+    return (
+      <>
+        {sessionStorage.getItem('actualQuestion') ? <Recording /> : <Profile />}
+      </>
+    )
+  }
+
+  return (
+    <div className="App">
+      <NavBarHeader />
+      <Container fluid className='mx-auto col-md-8'>
+        {userName ? <NotLandingPage /> : <LandingPage />}
+      </Container>
+      
+      {/* Footer at the bottom of the page */}
+      <footer className="py-3" style={{ position: "absolute", bottom: 0, width: "100vw" }}>
+        <Container className='text-center'>
+          <small className="text-muted">&copy; 2024 by Us</small>
+=======
   return (
     <div className="App">
       <Router>
@@ -55,6 +80,7 @@ function App() {
               </ProtectedRoute>
             } />
           </Routes>
+>>>>>>> origin/main
         </Container>
 
         <footer className="py-3" style={{ position: "absolute", bottom: 0, width: "100vw" }}>

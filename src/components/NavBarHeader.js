@@ -1,5 +1,18 @@
 import { Navbar, Container, Button } from 'react-bootstrap';
 import { signInWithGoogle, signOut } from '../authentication';
+<<<<<<< HEAD
+import { BsAppIndicator } from 'react-icons/bs';
+
+export const NavBarHeader = () => {
+    const userName = sessionStorage.getItem('user');
+    return (
+      <Navbar className="bg-body-tertiary">
+          <Container fluid>
+            <Navbar.Brand><BsAppIndicator /> InsightAssist</Navbar.Brand>
+            {userName ? 
+              <Button className="ms-auto" variant="outline-secondary" 
+                onClick={signOut}
+=======
 import { useNavigate } from 'react-router-dom';
 
 export const NavBarHeader = () => {
@@ -37,6 +50,7 @@ export const NavBarHeader = () => {
               {/* Some pdding */}
               <Button className="" variant="outline-secondary"
                 onClick={handleLogout}
+>>>>>>> origin/main
               >
                 Logout
               </Button>
