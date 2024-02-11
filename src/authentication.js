@@ -22,12 +22,8 @@ export const signInWithGoogle = (navigate) => {
 
             const user = result.user;
             sessionStorage.setItem('user', user.displayName);
-<<<<<<< HEAD
 
-            // TODO: send to the backend
-=======
             sessionStorage.setItem('user_fid', user.uid);
->>>>>>> origin/main
             
             signInUser(user.displayName, user.uid, user.email);
 
