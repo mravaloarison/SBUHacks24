@@ -31,7 +31,7 @@ function App() {
         <NavBarHeader className="clickeable" />
         <Container fluid className='mx-auto col-md-8'>
           <Routes>
-            <Route path="/" element={<Recording />} />
+            <Route path="/" element={<LandingPage />} />
             <Route path="recording" element={<Recording />} />
             <Route
               path="interview"

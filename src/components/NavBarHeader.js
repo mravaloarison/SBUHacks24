@@ -1,6 +1,7 @@
 import { Navbar, Container, Button } from 'react-bootstrap';
 import { signInWithGoogle, signOut } from '../authentication';
 import { useNavigate } from 'react-router-dom';
+import { BsAppIndicator } from 'react-icons/bs';
 
 export const NavBarHeader = () => {
   const navigate = useNavigate();
@@ -25,7 +26,7 @@ export const NavBarHeader = () => {
         <Navbar.Brand
           onClick={() => navigate('/dashboard')}
         >
-          InsightAssist
+          <BsAppIndicator /> Slay The Interview
         </Navbar.Brand>
         {userName ?
           (

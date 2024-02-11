@@ -14,12 +14,17 @@ export const InterviewPage = () => {
     const [questionPrompt, setQuestionPrompt] = useState('Tell me more about yorself');
     const [feedbacks, setFeedbacks] = useState([]);
     const [relatedPrompts, setRelatedPrompts] = useState([]);
-    
+
     const [transcriptText, setTranscriptText] = useState('');
     const [previousResponses, setPreviousResponses] = useState([]);
-    
+    const [viewPreviousResponses, setViewPreviousResponses] = useState(false);
+
     let { collectionId } = useParams();
 
+
+    const handlePreviewResponses = () => {
+        setViewPreviousResponses(!viewPreviousResponses);
+    }
 
 
     const {
@@ -45,14 +50,14 @@ export const InterviewPage = () => {
             populateRelatedPrompts();
             getPreviousResponsesFromYourself(randomPrompt.prompt);
         };
-    
+
         fetchData();
     }, []);
 
 
     const getPreviousResponsesFromYourself = async (question_prompt) => {
         const previousResponses = await postGetAnswers(sessionStorage.getItem('user_fid'), question_prompt);
-        
+
         setPreviousResponses(previousResponses);
     }
 
@@ -121,19 +126,19 @@ export const InterviewPage = () => {
         saveAnswer(responsePrompt);
     }
 
-    const getRandom =  async () => {
-        
+    const getRandom = async () => {
+
         let randomResponse = await getRandomPromp(
             collectionId
         );
         await populateInterviewPage(randomResponse);
-    
+
     }
 
     const populateInterviewPage = async (responsePrompt) => {
-        
+
         setQuestionPrompt(responsePrompt.prompt);
-        
+
         getPreviousResponsesFromYourself(responsePrompt.prompt);
     }
 
@@ -172,13 +177,23 @@ export const InterviewPage = () => {
             </Form.Group>
 
             <Stack direction="horizontal" gap={2}>
-                <Button variant={recording ? "outline-dark" : "outline-primary"} onClick={recordingScreen}>
-                    {recording ? "Stop Recording" : "Start Recording"}
-                </Button>
+                {
+                    enableRecording ?
+                        <Button variant={recording ? "outline-dark" : "outline-primary"} onClick={recordingScreen} >
+                            Start Recording
+                        </Button>
+                        : (<></>)
+                }
                 <Button variant="outline-dark" onClick={handleFeedBack}>Get Feedback</Button>
-                <Button variant="outline-dark" onClick={storeResponse}>Save</Button>
+                {
+                    transcriptText && transcriptText.length > 0 ? (<Button variant="outline-dark" onClick={storeResponse}>Save Response</Button>) : (<></>)
+                }
                 <Button variant="outline-dark" onClick={getRandom}>Random</Button>
-                <Button variant="outline-danger" className='ms-auto' onClick={resetTranscript}>Reset Speech</Button>
+                {
+                    enableRecording ? (<Button variant="outline-danger" className='ms-auto' onClick={resetTranscript}>Reset Speech</Button>): (
+                        <Button variant="outline-danger" className='ms-auto' onClick={() => setTranscriptText('')} >Reset</Button>
+                    )
+                }
             </Stack>
 
             <Toast className='mt-3' show={showToast} onClose={toggleShowToast}>
@@ -200,32 +215,43 @@ export const InterviewPage = () => {
 
             <DropdownButton id="dropdown-basic-button" title="Related Prompts">
                 {
-                    relatedPrompts.map((prompt, index) => {
+                    relatedPrompts && relatedPrompts.map((prompt, index) => {
                         return <Dropdown.Item key={index} onClick={() => populateInterviewPage(prompt)}>{prompt.prompt}</Dropdown.Item>
                     })
                 }
             </DropdownButton>
 
             <br />
+
+            
+            <Form.Check
+                type="switch"
+                id="custom-switch"
+                label="View Previous Responses"
+                checked={viewPreviousResponses}
+                onChange={handlePreviewResponses}
+            />
             {/* Add cards of your previous saved responses */}
 
 
 
             {
-                previousResponses && previousResponses.length > 0 ? <h4>Your previous responses</h4> : ''
+                viewPreviousResponses && previousResponses.length > 0 ? <h4>Your previous responses</h4> : ''
             }
-            {previousResponses && previousResponses.map((response, index) => (
-                <Card className="mb-3" key={index}>
-                    <Card.Header>{
-                        response.timestamp
-                    }</Card.Header>
-                    <Card.Body>
-                        <Card.Text>
-                            {response.answer}
-                        </Card.Text>
-                    </Card.Body>
-                </Card>
-            ))}
-        </div>
+            {
+                viewPreviousResponses && previousResponses.map((response, index) => (
+                    <Card className="mb-3" key={index}>
+                        <Card.Header>{
+                            response.timestamp
+                        }</Card.Header>
+                        <Card.Body>
+                            <Card.Text>
+                                {response.answer}
+                            </Card.Text>
+                        </Card.Body>
+                    </Card>
+                ))
+            }
+        </div >
     );
 };

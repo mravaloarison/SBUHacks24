@@ -178,6 +178,42 @@ export const getRandomPromp = async (collection_id) => {
     }
 }
 
+export const getHeatmapData = async (user_fid) => {
+    const url = `${BACKEND_URL}/crud/heatmap_activity/`;
+
+    try {
+        // Add collection_id as get param
+        const response = await axios.get(url, {
+            params: {
+                user_fid
+            }
+        });
+        // console.log(response);
+        return response.data;
+    } catch (error) {
+        console.error(error);
+        return '';
+    }
+}
+
+export const getRecentAnswers = async (user_fid) => {
+    const url = `${BACKEND_URL}/crud/recent_answers/`;
+
+    try {
+        // Add collection_id as get param
+        const response = await axios.get(url, {
+            params: {
+                user_fid
+            }
+        });
+        // console.log(response);
+        return response.data;
+    } catch (error) {
+        console.error(error);
+        return '';
+    }
+}
+
 export const getCategoricalPrompts = async (collection_id) => {
     const url = `${BACKEND_URL}/crud/prompts/`;
 
