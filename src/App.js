@@ -6,12 +6,19 @@ import { LandingPage } from './components/LandingPage';
 
 function App() {
   const userName = sessionStorage.getItem('user');
+  const NotLandingPage = () => {
+    return (
+      <>
+        {sessionStorage.getItem('actualQuestion') ? <Recording /> : <Profile />}
+      </>
+    )
+  }
 
   return (
     <div className="App">
       <NavBarHeader />
       <Container fluid className='mx-auto col-md-8'>
-        {userName ? <Recording /> : <LandingPage />}
+        {userName ? <NotLandingPage /> : <LandingPage />}
       </Container>
       
       {/* Footer at the bottom of the page */}

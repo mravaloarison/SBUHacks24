@@ -1,6 +1,5 @@
 import { initializeApp } from "firebase/app";
 import { getAuth, signInWithPopup, GoogleAuthProvider } from "firebase/auth";
-import { sendCredentialToTheBackend } from './api';
 
 const firebaseConfig = {
   apiKey: "AIzaSyAOonudCmYXaeuKvJ3BYhiHH2Q6986s7yU",
@@ -24,7 +23,6 @@ export const signInWithGoogle = () => {
             sessionStorage.setItem('user', user.displayName);
 
             // TODO: send to the backend
-            sendCredentialToTheBackend(user.displayName, user.email);
             
             // reload the page
             window.location.reload();
