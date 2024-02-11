@@ -55,3 +55,107 @@ export const getRandomPrompt = async () => {
         return '';
     }
 }
+
+/**
+ * 
+class CreateAnswer(BaseModel):
+    """
+    Just for creating asnwer with no grading yet.
+    """
+    answer: str
+    user_fid: str
+
+    prompt_message: str
+    is_public: bool
+    class Config:
+        orm_mode = True
+ */
+export const saveAnswer = async ({
+    answer,
+    user_fid,
+    prompt_message,
+    is_public
+}) => {
+    const url = `${BACKEND_URL}/crud/answer/`;
+    const data = {
+        answer,
+        user_fid,
+        prompt_message,
+        is_public
+    };
+
+    try {
+        const response = await axios.post(url, data, {
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        });
+
+        console.log(response);
+        return response.data;
+    } catch (error) {
+        console.error(error);
+        return '';
+    }
+}
+
+/**
+ * 
+ * 
+class CreateUser(BaseModel):
+    firebaseid: str
+    username: str
+    email: str
+    class Config:
+        orm_mode = True
+
+
+        /crud/sign_user
+ */
+export const signInUser = async (username, user_fid, email) => {
+
+    const url = `${BACKEND_URL}/crud/sign_user`;
+    const data = {
+        firebaseid: user_fid,
+        username: username,
+        email: email
+    }
+
+    try {
+        const response = await axios.post(url, data, {
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        });
+
+        console.log(response);
+        return response.data;
+    } catch (error) {
+        console.error(error);
+        return '';
+    }
+}
+
+
+
+export const postGetAnswers  = async (user_fid, prompt_message) => {
+    const url = `${BACKEND_URL}/crud/prev_answers`;
+    const data ={
+        user_fid,
+        prompt_message
+    }
+    try {
+        const response = await axios.post(url, data, {
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        });
+
+        console.log(response);
+        return response.data;
+    } catch (error) {
+        console.error(error);
+        return '';
+    }
+}
+

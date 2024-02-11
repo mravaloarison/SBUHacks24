@@ -1,8 +1,8 @@
-import { Button, Stack, Form, Toast, Alert } from 'react-bootstrap';
+import { Button, Stack, Form, Toast, Alert, Card } from 'react-bootstrap';
 import { useEffect, useState } from 'react';
 import SpeechRecognition, { useSpeechRecognition } from 'react-speech-recognition';
 import { Feedback } from '../components/Feedback';
-import { AskFeedback } from '../utils';
+import { AskFeedback, saveAnswer, postGetAnswers } from '../utils';
 
 export const InterviewPage = () => {
     const [recording, setRecording] = useState(false);
@@ -13,6 +13,13 @@ export const InterviewPage = () => {
     const [feedbacks, setFeedbacks] = useState([]);
 
     const [transcriptText, setTranscriptText] = useState('');
+    const [previousResponses, setPreviousResponses] = useState([{
+        answer: 'I am a software engineer with 5 years of experience',
+        user_fid: '12345',
+        prompt_message: 'Tell me more about yorself',
+        is_public: true,
+        timestamp: '2021-09-01T12:00:00'
+    }]);
 
 
 
@@ -29,7 +36,18 @@ export const InterviewPage = () => {
         } else {
             setRecording(false);
         }
+        
     }, [listening]);
+
+    useEffect(() => {
+        getPreviousResponsesFromYourself();
+    }, []);
+
+    const getPreviousResponsesFromYourself = async () => {
+        const previousResponses = await postGetAnswers(sessionStorage.getItem('user_fid'), questionPrompt);
+        console.log(previousResponses, 'previousResponses')
+        setPreviousResponses(previousResponses);
+    }
 
     const recordingScreen = () => {
         if (recording) {
@@ -44,7 +62,7 @@ export const InterviewPage = () => {
         return <span>Browser doesn't support speech recognition.</span>;
     }
 
-    const handleFeedBack = async  () => {
+    const handleFeedBack = async () => {
 
         let responseText = enableRecording ? transcript : transcriptText;
         const feedbackMessage = await AskFeedback({
@@ -54,9 +72,9 @@ export const InterviewPage = () => {
             is_public: responseIsPublic
         });
 
-        
 
-        setFeedbacks([...feedbacks, feedbackMessage]);
+
+        setFeedbacks([feedbackMessage, ...feedbacks]);
         setShowToast(true);
 
     };
@@ -71,6 +89,22 @@ export const InterviewPage = () => {
 
     const toggleResponseIsPublic = () => {
         setResponseIsPublic(!responseIsPublic);
+    }
+
+    const storeResponse = () => {
+        
+        let responseText = enableRecording ? transcript : transcriptText;
+        let responsePrompt = {
+            answer: responseText,
+            user_fid: sessionStorage.getItem('user_fid'),
+            prompt_message: questionPrompt,
+            is_public: responseIsPublic,
+            timestamp: new Date().toISOString()
+        }
+
+        setPreviousResponses([...previousResponses, responsePrompt]);
+
+        saveAnswer(responsePrompt);
     }
 
 
@@ -100,9 +134,9 @@ export const InterviewPage = () => {
 
             <Form.Group className="mb-3" controlId="exampleForm.ControlTextarea1">
                 <Form.Label>Your response</Form.Label>
-                <Form.Control as="textarea" placeholder='' value={enableRecording ? transcript:  transcriptText} rows={5}  
-                
-  onChange={e => setTranscriptText(e.target.value)} />
+                <Form.Control as="textarea" placeholder='' value={enableRecording ? transcript : transcriptText} rows={5}
+
+                    onChange={e => setTranscriptText(e.target.value)} />
             </Form.Group>
 
             <Stack direction="horizontal" gap={2}>
@@ -110,6 +144,7 @@ export const InterviewPage = () => {
                     {recording ? "Stop Recording" : "Start Recording"}
                 </Button>
                 <Button variant="outline-dark" onClick={handleFeedBack}>Get Feedback</Button>
+                <Button variant="outline-dark" onClick={storeResponse}>Save</Button>
                 <Button variant="outline-danger" className='ms-auto' onClick={resetTranscript}>Reset Speech</Button>
             </Stack>
 
@@ -120,12 +155,29 @@ export const InterviewPage = () => {
                 </Toast.Header>
                 <Toast.Body>
                     {
-                        feedbacks.reverse().map((feedback, index) => {
+                        
+                        feedbacks.map((feedback, index) => {
                             return <Alert key={index} variant={feedback.type}>{feedback.message}</Alert>
                         })
                     }
                 </Toast.Body>
             </Toast>
+
+            <br />
+            {/* Add cards of your previous saved responses */}
+            <h5>Previous Responses</h5>
+            {previousResponses.map((response, index) => (
+                <Card className="mb-3" key={index}>
+                    <Card.Header>{
+                            response.timestamp
+                        }</Card.Header>
+                    <Card.Body>
+                        <Card.Text>
+                            {response.answer}
+                        </Card.Text>
+                    </Card.Body>
+                </Card>
+            ))}
         </div>
     );
 };

@@ -1,5 +1,6 @@
 import { initializeApp } from "firebase/app";
 import { getAuth, signInWithPopup, GoogleAuthProvider } from "firebase/auth";
+import { signInUser } from "./utils";
 
 const firebaseConfig = {
     apiKey: "AIzaSyAOonudCmYXaeuKvJ3BYhiHH2Q6986s7yU",
@@ -18,15 +19,19 @@ const auth = getAuth(app);
 export const signInWithGoogle = (navigate) => {
     signInWithPopup(auth, provider)
         .then((result) => {
+
             const user = result.user;
             sessionStorage.setItem('user', user.displayName);
             sessionStorage.setItem('user_fid', user.uid);
             
+            signInUser(user.displayName, user.uid, user.email);
 
+            
             // Redirect to a different route
             //   Reload the page
             window.location.reload();
             navigate("/dashboard");
+            console.log(result);
         })
         .catch((error) => {
             console.log(error);

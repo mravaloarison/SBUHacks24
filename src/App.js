@@ -32,6 +32,7 @@ function App() {
         <Container fluid className='mx-auto col-md-8'>
           <Routes>
             <Route path="/" element={<LandingPage />} />
+            <Route path=":userId" element={<ProfilePage />} />
             <Route
               path="interview"
               element={
