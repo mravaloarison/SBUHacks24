@@ -197,30 +197,35 @@ export const InterviewPage = () => {
             </Form.Group>
 
             <Stack direction="horizontal" gap={2}>
-                {
-                    enableRecording ?
-                        <Button variant={recording ? "outline-dark" : "outline-primary"} onClick={recordingScreen} >
-                            Start Recording
-                        </Button>
-                        : (<></>)
-                }
-                <Button variant="outline-dark" onClick={handleFeedBack}>Get Feedback</Button>
-                {
-                    transcriptText && transcriptText.length > 0 ? (<Button variant="outline-dark" onClick={storeResponse}>Save Response</Button>) : (<></>)
-                }
+
+                <Stack direction="horizontal" gap={2}>
+                    {
+                        enableRecording ?
+                            <Button variant={recording ? "outline-dark" : "outline-primary"} onClick={recordingScreen} >
+                                {recording ? "Stop Recording" : "Start Recording"}
+                            </Button>
+                            : (<></>)
+
+                    }
+
+                    {
+                        enableRecording ? (<Button variant="outline-danger" onClick={resetTranscript}>Reset Speech</Button>) : (
+                            <Button variant="outline-danger" onClick={() => setTranscriptText('')} >Reset</Button>
+                        )
+                    }
+
+                </Stack>
                 <Button variant="outline-dark" onClick={getRandom}>Random</Button>
-                
+
                 {
                     isPromptBookmarked() ? (<Button variant="outline-dark" disabled>Bookmarked</Button>) : (
                         <Button variant="outline-dark" onClick={bookmark}>Bookmark</Button>)
                 }
-
-
+                <Button variant="outline-dark"  className='ms-auto' onClick={handleFeedBack}>Get Feedback</Button>
                 {
-                    enableRecording ? (<Button variant="outline-danger" className='ms-auto' onClick={resetTranscript}>Reset Speech</Button>) : (
-                        <Button variant="outline-danger" className='ms-auto' onClick={() => setTranscriptText('')} >Reset</Button>
-                    )
+                    transcriptText && transcriptText.length > 0 ? (<Button variant="outline-dark" onClick={storeResponse}>Save Response</Button>) : (<></>)
                 }
+
 
 
 

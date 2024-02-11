@@ -26,7 +26,7 @@ export const NavBarHeader = () => {
         <Navbar.Brand
           onClick={() => navigate('/dashboard')}
         >
-          <BsAppIndicator /> Slay The Interview
+          <BsAppIndicator /> SlayTheInterview
         </Navbar.Brand>
         {userName ?
           (
@@ -38,7 +38,7 @@ export const NavBarHeader = () => {
               {/* Some pdding */}
               <Button className="" variant="outline-secondary"
                 onClick={handleLogout}
-              >
+            >
                 Logout
               </Button>
 

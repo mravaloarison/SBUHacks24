@@ -20,13 +20,12 @@ export const DashboardPage = () => {
         <div className="mt-4 text-center">
             <h3>
                 <span><BsAppIndicator /></span>
-                <span> Find Public Interview Sets</span>
+                <span> Find Public Interview Bank</span>
             </h3>
             <hr />
-            <p className='mb-4'>Be more confident with your next job Interview using our AI based trainer.</p>
+            <p className='mb-4'>Collections of commonly asked interview questions.</p>
 
             <Container fluid className='mx-auto mb-3 '>
-                <p>Find public interview sets</p>
 
                 <div className="row justify-content-between">
 
@@ -38,7 +37,7 @@ export const DashboardPage = () => {
                             <Card.Body >
                                 <Card.Title>Core Interviewing Questions</Card.Title>
                                 <Card.Text>
-                                    Click here to view core interviewing questions.
+                                    Almost any company will ask you these questions.
                                 </Card.Text>
                             </Card.Body>
 
@@ -54,7 +53,7 @@ export const DashboardPage = () => {
                             <Card.Body >
                                 <Card.Title>Top Behavioural Questions</Card.Title>
                                 <Card.Text>
-                                    This is a collection of behavioural interview questions.
+                                    Classical behavioural interview questions.
                                 </Card.Text>
                             </Card.Body>
 
