@@ -1,0 +1,23 @@
+.linkStyle {
+  text-decoration: none;
+  color: inherit;
+  /* Auto height in middle */
+
+  padding-right: 20px;
+  cursor: pointer;
+}
+
+
+.clickeable{
+  
+  cursor: pointer;
+}
+
+
+.hoverable {
+  transition: transform 0.3s;
+}
+
+.hoverable:hover {
+  transform: scale(1.05);
+}

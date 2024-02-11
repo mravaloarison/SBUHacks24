@@ -4,7 +4,17 @@ import { FeatureCard } from './FeaturedCard';
 import { BsAppIndicator } from 'react-icons/bs';
 import { signInWithGoogle } from '../authentication';
 
+const tryNow = () => {
+    console.log('Try now');
+
+
+
+}
+
+
 export const LandingPage = () => {
+    
+  const userName = sessionStorage.getItem('user');
     return (
         <div className="mt-4 text-center">
             <h3>
@@ -41,6 +51,8 @@ export const LandingPage = () => {
             </Container>
 
             <Button size='lg' variant='outline-primary' onClick={signInWithGoogle}>Continue with Google</Button>
+            {/* Add Spacing */}
+            <div className='mb-3'></div>
           </div>
     )
 }
