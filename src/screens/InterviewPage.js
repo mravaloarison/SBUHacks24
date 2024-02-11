@@ -2,7 +2,7 @@ import { Button, Stack, Form, Toast, Alert, Card, Dropdown, DropdownButton } fro
 import { useEffect, useState } from 'react';
 import SpeechRecognition, { useSpeechRecognition } from 'react-speech-recognition';
 
-import { AskFeedback, saveAnswer, postGetAnswers, getRandomPromp, getCategoricalPrompts } from '../utils';
+import { AskFeedback, saveAnswer, postGetAnswers, getRandomPromp, getCategoricalPrompts, getRandomPrompt } from '../utils';
 
 import { useParams } from 'react-router-dom';
 
@@ -39,9 +39,15 @@ export const InterviewPage = () => {
     }, [listening]);
 
     useEffect(() => {
-        populateRelatedPrompts();
-        getPreviousResponsesFromYourself(questionPrompt);
-    },[]);
+        const fetchData = async () => {
+            const randomPrompt = await getRandomPrompt(collectionId);
+            setQuestionPrompt(randomPrompt.prompt);
+            populateRelatedPrompts();
+            getPreviousResponsesFromYourself(randomPrompt.prompt);
+        };
+    
+        fetchData();
+    }, []);
 
 
     const getPreviousResponsesFromYourself = async (question_prompt) => {
