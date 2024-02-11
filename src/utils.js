@@ -42,3 +42,16 @@ export const AskFeedback = async ({
         return '';
     }
 }
+
+export const getRandomPrompt = async () => {
+    const url = `${BACKEND_URL}/crud/prompt_random/`;
+
+    try {
+        const response = await axios.get(url);
+        console.log(response);
+        return response.data;
+    } catch (error) {
+        console.error(error);
+        return '';
+    }
+}

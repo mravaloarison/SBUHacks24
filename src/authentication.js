@@ -19,9 +19,9 @@ export const signInWithGoogle = (navigate) => {
     signInWithPopup(auth, provider)
         .then((result) => {
             const user = result.user;
-            console.log(user);
             sessionStorage.setItem('user', user.displayName);
             sessionStorage.setItem('user_fid', user.uid);
+            
 
             // Redirect to a different route
             //   Reload the page
@@ -35,6 +35,7 @@ export const signInWithGoogle = (navigate) => {
 
 export const signOut = (navigate) => {
     sessionStorage.removeItem('user');
+    sessionStorage.removeItem('user_fid');
 
     auth.signOut();
 

@@ -4,6 +4,7 @@ import { useState } from 'react';
 
 export const ProfilePage = () => {
     const user = sessionStorage.getItem('user');
+    const user_fid = sessionStorage.getItem('user_fid');
     const [show, setShow] = useState(false);
     const handleClose = () => setShow(false);
     const handleShow = () => setShow(true);
@@ -24,6 +25,7 @@ export const ProfilePage = () => {
     return (
         <div className="mt-5">
             <p>You are logged in as: {user}</p>
+            <p>Your user id is: {user_fid}</p>
 
             <Stack direction='vertical' gap={3} fluid>
                 <Form.Control type="search" placeholder="search" />
