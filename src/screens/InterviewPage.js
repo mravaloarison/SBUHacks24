@@ -2,7 +2,7 @@ import { Button, Stack, Form, Toast, Alert, Card, Dropdown, DropdownButton } fro
 import { useEffect, useState } from 'react';
 import SpeechRecognition, { useSpeechRecognition } from 'react-speech-recognition';
 
-import { AskFeedback, saveAnswer, postGetAnswers, getRandomPromp, getCategoricalPrompts, getRandomPrompt } from '../utils';
+import { AskFeedback, saveAnswer, postGetAnswers, getRandomPromp, getCategoricalPrompts, getRandomPrompt, bookmarkPrompt, getUserBookmarks } from '../utils';
 
 import { useParams } from 'react-router-dom';
 
@@ -18,6 +18,7 @@ export const InterviewPage = () => {
     const [transcriptText, setTranscriptText] = useState('');
     const [previousResponses, setPreviousResponses] = useState([]);
     const [viewPreviousResponses, setViewPreviousResponses] = useState(false);
+    const [userBookmarks, setUserBookmarks] = useState([]);
 
     let { collectionId } = useParams();
 
@@ -53,10 +54,10 @@ export const InterviewPage = () => {
 
         fetchData();
     }, []);
-
+    const user_fid = sessionStorage.getItem('user_fid');
 
     const getPreviousResponsesFromYourself = async (question_prompt) => {
-        const previousResponses = await postGetAnswers(sessionStorage.getItem('user_fid'), question_prompt);
+        const previousResponses = await postGetAnswers(user_fid, question_prompt);
 
         setPreviousResponses(previousResponses);
     }
@@ -86,7 +87,7 @@ export const InterviewPage = () => {
         let responseText = enableRecording ? transcript : transcriptText;
         const feedbackMessage = await AskFeedback({
             answer: responseText,
-            user_fid: sessionStorage.getItem('user'),
+            user_fid: user_fid,
             prompt_message: questionPrompt,
             is_public: responseIsPublic
         });
@@ -115,7 +116,7 @@ export const InterviewPage = () => {
         let responseText = enableRecording ? transcript : transcriptText;
         let responsePrompt = {
             answer: responseText,
-            user_fid: sessionStorage.getItem('user_fid'),
+            user_fid: user_fid,
             prompt_message: questionPrompt,
             is_public: responseIsPublic,
             timestamp: new Date().toISOString()
@@ -138,9 +139,28 @@ export const InterviewPage = () => {
     const populateInterviewPage = async (responsePrompt) => {
 
         setQuestionPrompt(responsePrompt.prompt);
+        const userBookmarks = await getUserBookmarks(user_fid);
+        console.log("USER BOOKMARKS")
+        console.log(userBookmarks);
+        setUserBookmarks(userBookmarks);
 
         getPreviousResponsesFromYourself(responsePrompt.prompt);
     }
+
+    const bookmark = async () => {
+        if (isPromptBookmarked()) {
+            return;
+        }
+        // bookmark the current prompt
+        await bookmarkPrompt(user_fid, questionPrompt);
+        setUserBookmarks([...userBookmarks, questionPrompt]);
+    }
+
+    const isPromptBookmarked = () => {
+        return userBookmarks.includes(questionPrompt);
+    }
+
+
 
 
 
@@ -189,11 +209,22 @@ export const InterviewPage = () => {
                     transcriptText && transcriptText.length > 0 ? (<Button variant="outline-dark" onClick={storeResponse}>Save Response</Button>) : (<></>)
                 }
                 <Button variant="outline-dark" onClick={getRandom}>Random</Button>
+                
                 {
-                    enableRecording ? (<Button variant="outline-danger" className='ms-auto' onClick={resetTranscript}>Reset Speech</Button>): (
+                    isPromptBookmarked() ? (<Button variant="outline-dark" disabled>Bookmarked</Button>) : (
+                        <Button variant="outline-dark" onClick={bookmark}>Bookmark</Button>)
+                }
+
+
+                {
+                    enableRecording ? (<Button variant="outline-danger" className='ms-auto' onClick={resetTranscript}>Reset Speech</Button>) : (
                         <Button variant="outline-danger" className='ms-auto' onClick={() => setTranscriptText('')} >Reset</Button>
                     )
                 }
+
+
+
+
             </Stack>
 
             <Toast className='mt-3' show={showToast} onClose={toggleShowToast}>
@@ -223,7 +254,7 @@ export const InterviewPage = () => {
 
             <br />
 
-            
+
             <Form.Check
                 type="switch"
                 id="custom-switch"

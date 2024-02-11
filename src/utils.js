@@ -233,3 +233,44 @@ export const getCategoricalPrompts = async (collection_id) => {
 }
 
 
+export const bookmarkPrompt = async (user_fid, prompt_message) => {
+    const url = `${BACKEND_URL}/crud/bookmark/`;
+    const data = {
+        user_fid,
+        prompt_message
+    };
+
+    try {
+        const response = await axios.post(url, data, {
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        });
+
+        console.log(response);
+        return response.data;
+    } catch (error) {
+        console.error(error);
+        return '';
+    }
+}
+
+
+export const getUserBookmarks = async (user_fid) => {  
+    const url = `${BACKEND_URL}/crud/bookmarks/`;
+
+    try {
+        const response = await axios.get(url, {
+            params: {
+                user_fid
+            }
+        });
+
+        console.log(response);
+        return response.data;
+    } catch (error) {
+        console.error(error);
+        return '';
+    }
+}
+
